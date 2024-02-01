@@ -9,13 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    environment: DOCKER_ENV
+    
     steps:
     - uses: actions/checkout@v3
-    - run: cd auth && docker build -t juliuss97/auth .
+    - run: echo $DOCKER_USERNAME
+    - run: cd auth && docker build -t $DOCKER_USERNAME/auth .
     - run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      env:
-        DOCKER_USERNAME: $ ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: $ ${{ secrets.DOCKER_PASSWORD }}
     - run: docker push juliuss97/auth
     
