@@ -1,10 +1,10 @@
-name: deploy-payements
+name: deploy-payments
 
 on:
   push:
     branches: [ "master" ]
     paths:
-      - 'payements/**'
+      - 'payments/**'
 
 jobs:
   build:
@@ -17,9 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3        
     - run: echo $DOCKER_USERNAME
-    - run: cd payements && docker build -t $DOCKER_USERNAME/payements .
+    - run: cd payments && docker build -t $DOCKER_USERNAME/payments .
     - run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    - run: docker push $DOCKER_USERNAME/payements
+    - run: docker push $DOCKER_USERNAME/payments
     - uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
