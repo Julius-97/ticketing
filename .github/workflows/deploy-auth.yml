@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: DOCKER_ENV
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -20,4 +19,10 @@ jobs:
     - run: cd auth && docker build -t $DOCKER_USERNAME/auth .
     - run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - run: docker push $DOCKER_USERNAME/auth
+    - uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - run: doctl kubernetes cluster kubeconfig save ticketing
+    - run: kubectl rollout restart deployment auth-depl
+    
     
