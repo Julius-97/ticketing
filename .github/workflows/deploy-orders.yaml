@@ -1,0 +1,23 @@
+name: deploy-order
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'orders/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: DOCKER_ENV
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+    steps:
+    - uses: actions/checkout@v3        
+    - run: echo $DOCKER_USERNAME
+    - run: cd orders && docker build -t $DOCKER_USERNAME/orders .
+    - run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    - run: docker push $DOCKER_USERNAME/orders
+    
